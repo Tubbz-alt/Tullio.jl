@@ -214,7 +214,7 @@ else # version 0.9, supports Julia 1.6
 end
 
 @testset "LoopVectorization onlyone" begin
-    ms = Mask{UInt8}(0x03); # Mask{8,Bool}<1, 1, 0, 0, 0, 0, 0, 0>
+    ms = Mask{4,UInt8}(0x03); # Mask{8,Bool}<1, 1, 0, 0, 0, 0, 0, 0>
     sv = SVec{4,Int}(1,2,3,4) # SVec{4,Int64}<1, 2, 3, 4>
 
     # preliminaries:
@@ -228,12 +228,12 @@ end
     @test Tullio.onlyone(true, 0) === true
     @test Tullio.onlyone(true, 1) === false
 
-    # @test Tullio.onlyone(ms, 0) === Mask{UInt8}(0x02)
-    @test Tullio.onlyone(ms, 0).u == 0x02
-    # @test Tullio.onlyone(ms, sv) === Mask{UInt8}(0x00)
-    @test Tullio.onlyone(ms, sv).u == 0x00
-    # @test Tullio.onlyone(ms, zero(sv)) === Mask{UInt8}(0x02)
-    @test Tullio.onlyone(ms, zero(sv)).u == 0x02
+    @test Tullio.onlyone(ms, 0) === Mask{4}(0x02)
+    # @test Tullio.onlyone(ms, 0).u == 0x02
+    @test Tullio.onlyone(ms, sv) === Mask{4}(0x00)
+    # @test Tullio.onlyone(ms, sv).u == 0x00
+    @test Tullio.onlyone(ms, zero(sv)) === Mask{4}(0x02)
+    # @test Tullio.onlyone(ms, zero(sv)).u == 0x02
 end
 
 @testset "parsing + LoopVectorization" begin include("parsing.jl") end
